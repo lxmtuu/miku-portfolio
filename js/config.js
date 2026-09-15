@@ -88,7 +88,7 @@ window.SITE = {
     { net: 'discord',   label: 'Discord',   handle: 'Pianist Developer', url: 'https://discord.gg/TMN7xjMV2' },
     { net: 'tiktok',    label: 'TikTok',    handle: 'Yami',              url: 'https://www.tiktok.com/@lx_mtuu' },
     { net: 'github',    label: 'GitHub',    handle: 'lxmtuu',            url: 'https://github.com/lxmtuu' },
-    { net: 'email',     label: 'Email',     handle: 'octieuwayway@gmail.com', url: 'mailto:lexuanminhtufw@gmail.com' }
+    { net: 'email',     label: 'Email',     handle: 'lexuanminhtufw.com', url: 'mailto:lexuanminhtufw@gmail.com' }
   ],
 
   // Danh sách anime yêu thích (hiển thị ở trang Sở thích)
