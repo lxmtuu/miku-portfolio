@@ -1,6 +1,6 @@
 /* ============================================================
-   MUSIC ENGINE — nhạc nền tổng hợp (Web Audio API) + piano mini
-   Không cần file mp3 vẫn chạy; có thể nạp file nhạc riêng.
+   MUSIC ENGINE — nhạc nền tự động phát (MP3 / Web Audio Synth) + piano mini
+   Tự động bật nhạc nền khi vào trang (hoặc ngay ở tương tác đầu tiên nếu trình duyệt chặn autoplay).
    ============================================================ */
 (function () {
   'use strict';
@@ -8,10 +8,11 @@
   const BPM = 96, SPB = 60 / BPM, LOOP_STEPS = 64; // 32 phách, mỗi phách 2 step
   let ctx = null, master = null, sfx = null, delaySend = null, noiseBuf = null, analyser = null;
   let lastKeyAt = 0;
-  let playing = false, fileMode = false, audioEl = null, mediaSrc = null;
-  let customSrc = null, pendingFileSrc = null;
+  let playing = false, fileMode = true, audioEl = null, mediaSrc = null;
+  let customSrc = null, customName = '', pendingFileSrc = 'assets/audio/bgm.mp3';
   let stepIdx = 0, nextStepTime = 0, timer = null;
   let volume = 0.6;
+  let autoUnlockArmed = false;
 
   /* ---------- Bảng nhạc (soạn tay, vòng lặp 8 ô nhịp) ---------- */
   const CHORDS = [
@@ -75,12 +76,26 @@
     sfx.gain.value = volume;
     sfx.connect(ctx.destination);
     sfx.connect(delaySend);
+    sfx.connect(analyser);
 
     // noise buffer cho trống
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
     const data = noiseBuf.getChannelData(0);
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
     return ctx;
+  }
+
+  function connectAudioToGraph() {
+    if (!audioEl || mediaSrc) return;
+    ensureCtx();
+    if (ctx.state === 'running') {
+      try {
+        audioEl.volume = 1;
+        mediaSrc = ctx.createMediaElementSource(audioEl);
+        mediaSrc.connect(master);
+        mediaSrc.connect(delaySend);
+      } catch (e) { /* đã kết nối hoặc trình duyệt không cho phép */ }
+    }
   }
 
   /* ---------- Các "nhạc cụ" tổng hợp ---------- */
@@ -138,7 +153,12 @@
     if (step === 0 && bar % 2 === 1) bell(BELLS[Math.floor(Math.random() * BELLS.length)], t + SPB);
   }
 
+  function stopSynthTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
   function pump() {
+    if (!playing || fileMode || !ctx) return;
     while (nextStepTime < ctx.currentTime + 0.4) {
       scheduleStep(stepIdx, nextStepTime);
       stepIdx = (stepIdx + 1) % LOOP_STEPS;
@@ -148,46 +168,70 @@
 
   /* ---------- File nhạc (bgm.mp3 hoặc file người dùng chọn) ---------- */
   function useAudioElement(src) {
-    ensureCtx();
+    stopSynthTimer();
     if (!audioEl) {
       audioEl = new Audio();
       audioEl.loop = true;
-      mediaSrc = ctx.createMediaElementSource(audioEl);
-      mediaSrc.connect(master);
-      mediaSrc.connect(delaySend);
+      audioEl.preload = 'auto';
+      audioEl.volume = volume;
+      audioEl.addEventListener('error', () => {
+        // nếu không tải được file mp3 thì tự chuyển về Synth
+        if (!customSrc) {
+          fileMode = false;
+          setLabel('♪ Miku Synth BGM');
+          if (playing) start();
+        }
+      });
     }
-    audioEl.src = src;
+    if (audioEl.src !== src && !audioEl.src.endsWith(src)) {
+      audioEl.src = src;
+    }
     fileMode = true;
-  }
-  function detectBgmFile() {
-    // dò bgm.mp3 bằng thẻ <audio> — hoạt động cả khi mở file:// lẫn Live Server
-    try {
-      const probe = new Audio('assets/audio/bgm.mp3');
-      probe.preload = 'metadata';
-      probe.addEventListener('loadedmetadata', () => {
-        pendingFileSrc = 'assets/audio/bgm.mp3';
-        setLabel('♪ bgm.mp3 (file của bạn)');
-      }, { once: true });
-    } catch (e) { /* không có file → dùng nhạc tổng hợp */ }
   }
 
   /* ---------- Điều khiển ---------- */
   function start() {
     ensureCtx();
-    ctx.resume();
-    if (fileMode && audioEl) {
-      audioEl.play();
-    } else {
-      stepIdx = 0;
-      nextStepTime = ctx.currentTime + 0.1;
-      if (!timer) timer = setInterval(pump, 100);
-      pump();
-    }
+    const resumePromise = ctx.resume ? ctx.resume().catch(() => {}) : Promise.resolve();
     master.gain.setTargetAtTime(volume, ctx.currentTime, .1);
-    playing = true;
+
+    if (fileMode && audioEl) {
+      stopSynthTimer();
+      if (!mediaSrc) audioEl.volume = volume;
+      const playPromise = audioEl.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        return playPromise.then(() => {
+          playing = true;
+          resumePromise.then(() => connectAudioToGraph());
+          return true;
+        }).catch(() => {
+          playing = false;
+          return false;
+        });
+      }
+      playing = true;
+      return Promise.resolve(true);
+    } else {
+      if (audioEl) audioEl.pause();
+      return resumePromise.then(() => {
+        if (ctx.state !== 'running') {
+          playing = false;
+          return false;
+        }
+        playing = true;
+        stepIdx = 0;
+        nextStepTime = ctx.currentTime + 0.1;
+        stopSynthTimer();
+        timer = setInterval(pump, 100);
+        pump();
+        return true;
+      });
+    }
   }
+
   function stop() {
     playing = false;
+    stopSynthTimer();
     if (audioEl) audioEl.pause();
     if (ctx) {
       master.gain.setTargetAtTime(0.0001, ctx.currentTime, .12);
@@ -195,75 +239,224 @@
       setTimeout(() => { if (!playing && ctx && Date.now() - lastKeyAt > 400) ctx.suspend(); }, 450);
     }
   }
+
   function setVolume(v) {
     volume = v;
+    if (audioEl && !mediaSrc) audioEl.volume = v;
     if (ctx) {
       sfx.gain.setTargetAtTime(v, ctx.currentTime, .08);
       if (playing) master.gain.setTargetAtTime(v, ctx.currentTime, .08);
     }
   }
 
-  /* ---------- Phím piano mini (dùng chung engine) ---------- */
-  function playKey(midi) {
+  /* ---------- Phím piano mini (dùng chung engine, hỗ trợ nhiều âm sắc) ---------- */
+  function playKey(midi, tone) {
     ensureCtx();
     ctx.resume();
+    connectAudioToGraph();
     lastKeyAt = Date.now();
     const t = ctx.currentTime;
-    osc('triangle', freq(midi), t, .22, .005, 1.3, true, sfx);
-    osc('sine', freq(midi) * 2, t, .07, .005, .8, true, sfx);
-    osc('sine', freq(midi) / 2, t, .05, .005, .6, false, sfx);
+    const f = freq(midi);
+    const mode = tone || 'piano';
+
+    if (mode === 'musicbox') {
+      osc('sine', f * 2, t, .18, .003, 1.6, true, sfx);
+      osc('triangle', f * 4, t, .06, .002, .7, true, sfx);
+      osc('sine', f, t, .08, .005, 1.1, false, sfx);
+    } else if (mode === 'guitar') {
+      osc('sawtooth', f, t, .14, .004, .95, true, sfx);
+      osc('triangle', f * 2, t, .08, .004, .55, true, sfx);
+      osc('sine', f / 2, t, .07, .006, .7, false, sfx);
+    } else if (mode === 'synth8bit') {
+      osc('square', f, t, .11, .002, .48, true, sfx);
+      osc('square', f * 2, t, .04, .002, .3, true, sfx);
+    } else {
+      // Crystal Piano (mặc định)
+      osc('triangle', f, t, .22, .005, 1.3, true, sfx);
+      osc('sine', f * 2, t, .07, .005, .8, true, sfx);
+      osc('sine', f / 2, t, .05, .005, .6, false, sfx);
+    }
   }
 
   /* ---------- Gắn UI ---------- */
   const $ = s => document.querySelector(s);
   function setLabel(txt) { const el = $('#track-label'); if (el) el.textContent = txt; }
 
-  // sessionStorage an toàn (một số trình duyệt chặn ở file:// hoặc chế độ riêng tư)
+  // sessionStorage an toàn
   const store = {
     get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
     set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
   };
 
+  let tryAutoPlayRef = () => {};
+
   document.addEventListener('DOMContentLoaded', () => {
-    const btn = $('#music-toggle'), panel = $('#music-panel'),
+    const player = $('#music-player'), btn = $('#music-toggle'), panel = $('#music-panel'),
           gear = $('#music-settings'), vol = $('#music-vol'),
-          up = $('#btn-upload'), fin = $('#file-input');
+          modeBtn = $('#btn-mode'), up = $('#btn-upload'), fin = $('#file-input');
 
-    detectBgmFile();
-
-    // gợi ý bật lại nhạc nếu phiên trước đang nghe
-    if (store.get('miku-music') === 'on') btn.classList.add('hint');
     const savedVol = store.get('miku-vol');
-    if (savedVol !== null) { volume = parseFloat(savedVol); vol.value = Math.round(volume * 100); }
+    if (savedVol !== null) {
+      const parsed = parseFloat(savedVol);
+      if (!Number.isNaN(parsed)) {
+        volume = Math.min(1, Math.max(0, parsed));
+        vol.value = Math.round(volume * 100);
+      }
+    }
+
+    function updateModeUI() {
+      if (!modeBtn) return;
+      if (fileMode) {
+        modeBtn.textContent = '🎹';
+        modeBtn.title = 'Chuyển sang nhạc Miku Synth (Web Audio)';
+      } else {
+        modeBtn.textContent = '🎵';
+        modeBtn.title = 'Chuyển sang nhạc MP3';
+      }
+    }
+
+    // Khởi tạo chế độ nhạc mặc định (ưu tiên MP3 bgm.mp3 trừ khi người dùng chọn Synth)
+    if (store.get('miku-mode') === 'synth') {
+      fileMode = false;
+      setLabel('♪ Miku Synth BGM');
+    } else {
+      useAudioElement(pendingFileSrc);
+      setLabel('♪ Miku Stage BGM (MP3)');
+    }
+    updateModeUI();
+
+    const UNLOCK_EVENTS = ['pointerdown', 'touchstart', 'keydown', 'click'];
+
+    function disarmAutoUnlock() {
+      if (!autoUnlockArmed) return;
+      autoUnlockArmed = false;
+      UNLOCK_EVENTS.forEach(ev => window.removeEventListener(ev, onFirstGesture, true));
+    }
+
+    function onFirstGesture(e) {
+      // Nếu người dùng bấm trực tiếp vào nút bật/tắt nhạc thì để sự kiện click của nút đó tự xử lý
+      if (e && e.target && e.target.closest && e.target.closest('#music-toggle')) {
+        disarmAutoUnlock();
+        return;
+      }
+      if (store.get('miku-music-manual-off') === '1' || playing) {
+        disarmAutoUnlock();
+        return;
+      }
+      start().then(ok => {
+        if (ok) {
+          btn.classList.remove('hint');
+          btn.classList.add('playing');
+          disarmAutoUnlock();
+        }
+      });
+    }
+
+    function tryAutoPlay() {
+      if (store.get('miku-music-manual-off') === '1' || playing) return;
+      start().then(ok => {
+        if (ok) {
+          btn.classList.remove('hint');
+          btn.classList.add('playing');
+          disarmAutoUnlock();
+        } else {
+          // Trình duyệt yêu cầu tương tác đầu tiên mới mở khóa âm thanh → tự bật ngay khi chạm/click bất kỳ đâu
+          btn.classList.add('hint');
+          if (!autoUnlockArmed) {
+            autoUnlockArmed = true;
+            UNLOCK_EVENTS.forEach(ev => window.addEventListener(ev, onFirstGesture, { capture: true, passive: true }));
+          }
+        }
+      });
+    }
+    tryAutoPlayRef = tryAutoPlay;
+
+    // Tự động bật nhạc ngay khi vào trang
+    tryAutoPlay();
 
     btn.addEventListener('click', () => {
+      disarmAutoUnlock();
       btn.classList.remove('hint');
-      if (playing) { stop(); btn.classList.remove('playing'); store.set('miku-music', 'off'); }
-      else {
-        if (pendingFileSrc && !fileMode && !customSrc) { useAudioElement(pendingFileSrc); }
-        start();
-        btn.classList.add('playing');
-        store.set('miku-music', 'on');
+      if (playing) {
+        stop();
+        btn.classList.remove('playing');
+        store.set('miku-music-manual-off', '1');
+      } else {
+        store.set('miku-music-manual-off', '0');
+        if (pendingFileSrc && !fileMode && !customSrc && store.get('miku-mode') !== 'synth') {
+          useAudioElement(pendingFileSrc);
+          setLabel('♪ Miku Stage BGM (MP3)');
+        }
+        updateModeUI();
+        start().then(ok => {
+          if (ok) {
+            btn.classList.add('playing');
+          }
+        });
       }
     });
+
+    if (modeBtn) {
+      modeBtn.addEventListener('click', () => {
+        const wasPlaying = playing;
+        if (wasPlaying) stop();
+        if (fileMode) {
+          fileMode = false;
+          store.set('miku-mode', 'synth');
+          setLabel('♪ Miku Synth BGM');
+        } else {
+          const src = customSrc || pendingFileSrc || 'assets/audio/bgm.mp3';
+          useAudioElement(src);
+          store.set('miku-mode', 'mp3');
+          setLabel(customName ? '♪ ' + customName : '♪ Miku Stage BGM (MP3)');
+        }
+        updateModeUI();
+        if (wasPlaying) {
+          start().then(ok => { if (ok) btn.classList.add('playing'); });
+        }
+      });
+    }
+
     gear.addEventListener('click', () => panel.classList.toggle('open'));
+
+    // đóng bảng cài đặt nhạc khi click ra ngoài
+    document.addEventListener('click', e => {
+      if (panel.classList.contains('open') && player && !player.contains(e.target)) {
+        panel.classList.remove('open');
+      }
+    });
+
     vol.addEventListener('input', () => {
       setVolume(vol.value / 100);
       store.set('miku-vol', String(vol.value / 100));
     });
+
     up.addEventListener('click', () => fin.click());
     fin.addEventListener('change', () => {
       const f = fin.files[0];
       if (!f) return;
+      if (customSrc) URL.revokeObjectURL(customSrc);
       customSrc = URL.createObjectURL(f);
-      const wasPlaying = playing;
-      if (wasPlaying) stop();
+      customName = f.name;
+      if (playing) stop();
       useAudioElement(customSrc);
+      store.set('miku-mode', 'mp3');
+      store.set('miku-music-manual-off', '0');
       setLabel('♪ ' + f.name);
-      start();
-      btn.classList.add('playing');
+      updateModeUI();
+      start().then(ok => {
+        if (ok) {
+          btn.classList.add('playing');
+        }
+      });
     });
   });
 
-  window.Music = { playKey, isPlaying: () => playing, analyser: () => analyser };
+  window.Music = {
+    playKey,
+    isPlaying: () => playing,
+    analyser: () => analyser,
+    tryAutoPlay: () => tryAutoPlayRef(),
+    toggle: () => { const b = $('#music-toggle'); if (b) b.click(); }
+  };
 })();

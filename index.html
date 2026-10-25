@@ -3,13 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yami Portfolio</title>
-  <meta name="description" content="Portfolio cá nhân của Lê Xuân Minh Tú — sinh viên Công nghệ thông tin, đam mê piano, guitar và anime. Chủ đề Hatsune Miku.">
-  <link rel="icon" type="image/jpeg" href="assets/img/avatar.jpg">
+  <title>Lê Xuân Minh Tú (Yami) ✦ Fullstack Developer &amp; Software Engineer</title>
+  <meta name="description" content="Portfolio &amp; CV của Lê Xuân Minh Tú (Yami / lxmtuu) — Fullstack Developer &amp; Software Engineer. Đam mê phát triển sản phẩm, piano, guitar và anime.">
+  <meta name="author" content="Lê Xuân Minh Tú (Yami)">
+  <meta name="theme-color" content="#39c5bb">
+
+  <!-- Open Graph / Facebook / Discord / Zalo -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:url" content="https://lxmtuu.id.vn/">
+  <meta property="og:title" content="Lê Xuân Minh Tú (Yami) ✦ Fullstack Developer &amp; Software Engineer">
+  <meta property="og:description" content="Fullstack Developer &amp; Software Engineer — yêu những dòng code sạch, những giai điệu đẹp và thế giới anime. Chào mừng đến với sân khấu kỹ thuật số của mình! 💙">
+  <meta property="og:image" content="https://lxmtuu.id.vn/assets/img/hero-bg.jpg">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lê Xuân Minh Tú (Yami) ✦ Fullstack Developer &amp; Software Engineer">
+  <meta name="twitter:description" content="Fullstack Developer &amp; Software Engineer — Piano, Guitar &amp; Anime. Chào mừng đến với sân khấu kỹ thuật số của mình!">
+  <meta name="twitter:image" content="https://lxmtuu.id.vn/assets/img/hero-bg.jpg">
+
+  <link rel="icon" type="image/jpeg" href="assets/img/avatar.jpg?v=4.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=4.02">
 </head>
 <body data-page="home">
 
@@ -23,13 +40,13 @@
       <p class="boot-line"><span id="boot-line"></span><span class="caret"></span></p>
       <div class="load-bar"><i id="load-fill"></i></div>
       <p class="load-pct"><span id="load-num">0</span>%</p>
-      <p class="skip-hint">♪ bấm để bỏ qua ▸</p>
+      <p class="skip-hint" data-i18n="loader.skip">♪ bấm chuột hoặc phím bất kỳ để bỏ qua ▸</p>
     </div>
     <div class="loader-flash">39</div>
   </div>
 
   <!-- ===== Nền & hiệu ứng ===== -->
-  <div class="bg-layer active" data-bg="home"    style="background-image:url('assets/img/hero-bg.jpg')"></div>
+  <div class="bg-layer active" data-bg="home"    style="background-image:url('assets/img/hero-bg.jpg?v=3.97')"></div>
   <div class="bg-layer"        data-bg="about"   style="background-image:url('assets/img/about-bg.jpg')"></div>
   <div class="bg-layer"        data-bg="hobbies" style="background-image:url('assets/img/music-bg.jpg')"></div>
   <div class="bg-layer"        data-bg="gallery" style="background-image:url('assets/img/anime-room.jpg')"></div>
@@ -40,19 +57,38 @@
   <div id="scroll-progress"></div>
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
-  <div id="page-transition"><span>♪</span></div>
+
+  <!-- ===== Hiệu ứng chuyển trang đa lớp phong cách sân khấu Miku ===== -->
+  <div id="page-transition" aria-hidden="true">
+    <div class="pt-layer l1"></div>
+    <div class="pt-layer l2"></div>
+    <div class="pt-layer l3"></div>
+    <div class="pt-content">
+      <span class="pt-stage" id="pt-stage">STAGE 01</span>
+      <div class="pt-eq"><i></i><i></i><i></i><i></i><i></i></div>
+      <strong class="pt-title" id="pt-title">TRANG CHỦ</strong>
+      <span class="pt-notes">♪ ✦ ♫</span>
+    </div>
+  </div>
 
   <!-- ===== Thanh điều hướng ===== -->
   <header id="navbar">
-    <a class="logo" href="#home">🎤 <span>Yami</span><em>.miku</em></a>
-    <nav id="nav-links">
-      <a href="#home"    data-route="home"    class="active">Trang chủ</a>
-      <a href="#about"   data-route="about">Giới thiệu</a>
-      <a href="#hobbies" data-route="hobbies">Sở thích</a>
-      <a href="#gallery" data-route="gallery">Dự án</a>
-      <a href="#contact" data-route="contact">Liên hệ</a>
+    <a class="logo" href="#home">🎤 <span>Yami</span><em>.dev</em></a>
+    <nav id="nav-links" aria-label="Điều hướng chính">
+      <a href="#home"    data-route="home"    data-i18n="nav.home"    class="active">Trang chủ</a>
+      <a href="#about"   data-route="about"   data-i18n="nav.about">Hồ sơ &amp; CV</a>
+      <a href="#gallery" data-route="gallery" data-i18n="nav.gallery">Dự án</a>
+      <a href="#hobbies" data-route="hobbies" data-i18n="nav.hobbies">Sở thích</a>
+      <a href="#contact" data-route="contact" data-i18n="nav.contact">Liên hệ</a>
     </nav>
-    <button id="nav-toggle" aria-label="Mở menu"><span></span><span></span><span></span></button>
+    <div class="nav-actions">
+      <button id="lang-toggle" class="lang-toggle" type="button" title="Switch to English" aria-label="Đổi ngôn ngữ Việt / Anh">
+        <span class="lang-opt active" data-lang="vi">VI</span>
+        <span class="lang-sep">/</span>
+        <span class="lang-opt" data-lang="en">EN</span>
+      </button>
+      <button id="nav-toggle" aria-label="Mở menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
   </header>
 
   <main>
@@ -60,152 +96,257 @@
     <section class="page active" id="page-home">
       <div class="hero">
         <div class="hero-text">
-          <p class="hello">✦ Xin chào, mình là ✦</p>
+          <p class="hello" data-i18n="home.hello">✦ Xin chào, mình là ✦</p>
           <h1 class="glow-text">Lê Xuân<br>Minh Tú</h1>
           <div class="typeline"><span id="typewriter"></span><span class="caret"></span></div>
-          <p class="hero-sub">Fullstack developer — mê những dòng code sạch, những giai điệu đẹp và thế giới anime. Chào mừng cậu đến với sân khấu kỹ thuật số của mình! 💙</p>
+          <p class="hero-sub" data-i18n-html="home.sub">
+            <b>Fullstack Developer &amp; Software Engineer</b> — đam mê xây dựng sản phẩm từ giao diện đến hệ thống, yêu những dòng code sạch, tiếng đàn piano và thế giới anime. Chào mừng cậu đến với sân khấu kỹ thuật số của mình! 💙
+          </p>
           <div class="hero-cta">
-            <a href="#about" class="btn btn-primary">Xem CV ✨</a>
-            <a href="#gallery" class="btn btn-ghost">Dự án ♪</a>
+            <a href="#about" class="btn btn-primary" data-i18n="home.ctaAbout">Xem Hồ sơ &amp; CV ✨</a>
+            <a href="#gallery" class="btn btn-ghost" data-i18n="home.ctaProjects">Dự án ♪</a>
           </div>
           <div class="hero-stats">
-            <span class="chip">💻 Fullstack Dev</span>
-            <span class="chip">⚛️ React</span>
-            <span class="chip">🟢 Node.js</span>
+            <span class="chip">💻 Fullstack Developer</span>
+            <span class="chip">⚙️ Software Engineer</span>
+            <span class="chip">⚛️ Next.js • .NET</span>
             <span class="chip">🎹 Piano</span>
           </div>
         </div>
         <div class="hero-avatar">
           <div class="avatar-ring"></div>
-          <img src="assets/img/avatar.jpg" alt="Ảnh đại diện phong cách Hatsune Miku">
-          <span class="orbit-note n1">♪</span>
-          <span class="orbit-note n2">♫</span>
-          <span class="orbit-note n3">♬</span>
-          <span class="orbit-note n4">♩</span>
+          <img src="assets/img/avatar.jpg?v=4.01" alt="Ảnh đại diện Lê Xuân Minh Tú (Yami)" data-lightbox="Lê Xuân Minh Tú (Yami / @lxmtuu) ✦ Fullstack Developer &amp; Software Engineer">
         </div>
       </div>
-      <a class="scroll-hint" href="#about">cuộn xuống <span>▾</span></a>
+      <a class="scroll-hint" href="#about" data-i18n-html="home.scroll">khám phá tiếp <span>▾</span></a>
     </section>
 
-    <!-- ================= GIỚI THIỆU ================= -->
+    <!-- ================= HỒ SƠ & CV ================= -->
     <section class="page" id="page-about">
-      <h2 class="page-title">Giới thiệu <span>bản thân</span></h2>
+      <h2 class="page-title" data-i18n-html="about.title">Hồ sơ <span>&amp; Giới thiệu</span></h2>
+      <p class="page-sub" data-i18n="about.sub">Đôi nét về con người, công việc và những công nghệ mình đang gắn bó mỗi ngày.</p>
+
       <div class="about-grid">
+        <!-- Tóm tắt chuyên môn -->
         <div class="glass card about-card reveal">
-          <h3>👋 Chào cậu!</h3>
-          <p>Mình là <b>Lê Xuân Minh Tú</b> — sinh viên CNTT định hướng <b>Fullstack Developer</b>: làm được từ giao diện đẹp mắt phía trước tới API và cơ sở dữ liệu phía sau.</p>
-          <p>Triết lý của mình: code cũng như nhạc — phải <b>sạch, đúng nhịp và có hồn</b>. Khi không lập trình, cậu sẽ thấy mình bên phím đàn piano, ôm cây guitar, hoặc đang cày anime cùng trà sữa. 🧋</p>
-          <p>Website này là "sân khấu" của mình — lấy cảm hứng từ <b>Hatsune Miku</b>, cô ca sĩ ảo đã truyền cảm hứng cho mình đến với âm nhạc. ♪</p>
-          <div class="info-chips">
-            <span class="chip">🎓 Sinh viên CNTT</span>
-            <span class="chip">💻 Fullstack</span>
-            <span class="chip">🎧 Yêu thích Hatsune Miku</span>
-            <span class="chip">🌸 Yêu thích Anime</span>
+          <h3 data-i18n="about.greeting">👋 Chào cậu, mình là Minh Tú!</h3>
+          <p data-i18n-html="about.p1">Mình thường dùng tên <b>Yami (@lxmtuu)</b> trên GitHub — hiện là một <b>Fullstack Developer &amp; Software Engineer</b>.</p>
+          <p data-i18n-html="about.p2">Mình thích tự tay xây dựng một sản phẩm trọn vẹn từ đầu đến cuối: từ lúc phác thảo <b>thiết kế hệ thống &amp; cơ sở dữ liệu</b>, viết <b>Backend API</b> an toàn, chăm chút từng chuyển động trên <b>giao diện Web</b>, cho đến lập trình các <b>ứng dụng Desktop đồ họa GPU &amp; âm thanh MIDI thời gian thực</b>.</p>
+          <p data-i18n-html="about.p3">Với mình, viết code cũng giống như chơi một bản nhạc — <b>cần sự chỉn chu trong từng nhịp, rõ ràng trong cấu trúc và luôn đặt cảm xúc của người dùng lên hàng đầu.</b> ♪</p>
+
+          <ul class="cv-meta-list">
+            <li><span data-i18n="about.metaNameLabel">Họ tên &amp; Handle:</span> <b data-i18n="about.metaNameVal">Lê Xuân Minh Tú (Yami · @lxmtuu)</b></li>
+            <li><span data-i18n="about.metaRoleLabel">Định hướng:</span> <b data-i18n="about.metaRoleVal">Fullstack Developer • Software Engineer</b></li>
+            <li><span data-i18n="about.metaLangLabel">Ngôn ngữ:</span> <b data-i18n="about.metaLangVal">Tiếng Việt (Bản ngữ) • Tiếng Anh (Đọc hiểu &amp; viết tài liệu kỹ thuật)</b></li>
+            <li><span data-i18n="about.metaGhLabel">Dấu ấn GitHub:</span> <b data-i18n="about.metaGhVal">GitHub Developer Program Member • Pull Shark ×2 • Pair Extraordinaire • Quickdraw • YOLO</b></li>
+          </ul>
+
+          <div class="cv-actions">
+            <a href="https://github.com/lxmtuu" target="_blank" rel="noopener" class="p-btn" data-i18n="about.btnGithub">🐙 Ghé thăm GitHub</a>
+            <a href="https://wakatime.com/@5908a739-21fe-4d77-9bbc-e36215edc052" target="_blank" rel="noopener" class="p-btn demo" data-i18n="about.btnWakatime">📊 Thống kê WakaTime</a>
           </div>
         </div>
+
+        <!-- Kỹ năng công nghệ -->
         <div class="glass card skills-card reveal">
-          <h3>💻 Kỹ năng fullstack</h3>
+          <h3 data-i18n="about.skillsTitle">🛠️ Tech Stack &amp; Kỹ năng</h3>
           <div id="skill-groups"></div>
         </div>
+
+        <!-- Điểm nhấn kỹ thuật -->
         <div class="glass card journey-card reveal">
-          <h3>🎼 Hai nửa của mình</h3>
+          <h3 data-i18n="about.highlightsTitle">⚡ Điểm nhấn Kỹ thuật Thực chiến</h3>
           <div class="journey">
-            <div class="j-item"><span class="j-ico">💻</span><h4>Ban ngày</h4><p>Sinh viên CNTT — algorithm, debug, và cà phê.</p></div>
-            <div class="j-arrow">♪</div>
-            <div class="j-item"><span class="j-ico">🎹</span><h4>Ban đêm</h4><p>Piano &amp; guitar — soạn giai điệu, cover nhạc anime.</p></div>
+            <div class="j-item">
+              <span class="j-ico">🏗️</span>
+              <h4 data-i18n="about.hl1Title">Kiến trúc Backend &amp; Thanh toán</h4>
+              <p data-i18n-html="about.hl1Desc">Thiết kế 48+ REST APIs, chống double-booking 4 lớp, transaction <code>Serializable</code>, xác thực JWT Rotation &amp; đối soát tự động <b>VietQR chuẩn EMVCo</b> qua HMAC Webhook.</p>
+            </div>
             <div class="j-arrow">✦</div>
-            <div class="j-item"><span class="j-ico">🌸</span><h4>Cuối tuần</h4><p>Marathon anime + học thêm công nghệ mới.</p></div>
+            <div class="j-item">
+              <span class="j-ico">🖥️</span>
+              <h4 data-i18n="about.hl2Title">Đồ họa GPU &amp; Audio / MIDI</h4>
+              <p data-i18n-html="about.hl2Desc">Phát triển engine <b>Direct3D 11</b> đa luồng (HDR 16-bit, PBR GGX + ACES shader, 240 FPS) và nền tảng <b>Web MIDI</b> nhận diện lực gõ + 3 pedal cùng Tone.js Salamander Piano.</p>
+            </div>
+            <div class="j-arrow">✦</div>
+            <div class="j-item">
+              <span class="j-ico">📐</span>
+              <h4 data-i18n="about.hl3Title">Quy trình &amp; Chất lượng Code</h4>
+              <p data-i18n-html="about.hl3Desc">Viết tài liệu kỹ thuật bài bản (SRS, ADR, ERD, Design System), kiểm thử Unit/E2E (<code>tsc --noEmit</code> 0 lỗi) và CI tự động kết xuất ảnh giao diện song ngữ Anh – Việt.</p>
+            </div>
           </div>
         </div>
+
+        <!-- Timeline kinh nghiệm & học vấn -->
         <div class="glass card timeline-card reveal">
-          <h3>🚀 Hành trình của mình</h3>
+          <h3 data-i18n="about.timelineTitle">🚀 Kinh nghiệm &amp; Hành trình Phát triển</h3>
           <div id="timeline" class="timeline"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= SỞ THÍCH ================= -->
-    <section class="page" id="page-hobbies">
-      <h2 class="page-title">Sở thích <span>của mình</span></h2>
-      <div class="hobby-grid">
-        <div class="glass card hobby-card reveal">
-          <div class="h-ico">🎹</div>
-          <h3>Piano</h3>
-          <p>Những phím đàn là nơi mình tìm thấy bình yên. Thích chơi nhạc phim anime và các bản ballad nhẹ nhàng.</p>
-          <span class="tag">♥ yêu nhất</span>
-        </div>
-        <div class="glass card hobby-card reveal">
-          <div class="h-ico">🎸</div>
-          <h3>Guitar</h3>
-          <p>Acoustic guitar cho những buổi chiều chill — đệm hát, fingerstyle và những hợp âm ấm áp.</p>
-          <span class="tag">chill</span>
-        </div>
-        <div class="glass card hobby-card reveal">
-          <div class="h-ico">⚡</div>
-          <h3>Guitar điện</h3>
-          <p>Distortion, riff rock và solo cháy hết mình! Năng lượng hoàn toàn khác biệt so với acoustic.</p>
-          <span class="tag">rock on!</span>
-        </div>
-        <div class="glass card hobby-card reveal">
-          <div class="h-ico">🌸</div>
-          <h3>Xem anime</h3>
-          <p>Từ shounen tới slice-of-life, anime là nguồn cảm hứng bất tận cho cả code lẫn âm nhạc của mình.</p>
-          <span class="tag">otaku mode</span>
-        </div>
-      </div>
-
-      <div class="glass card piano-box reveal">
-        <h3>🎹 Chơi thử một nốt nhạc!</h3>
-        <p class="piano-hint">Click hoặc chạm vào phím đàn bên dưới để thử giai điệu nhé~ ♪</p>
-        <div id="piano">
-          <button class="key white" data-midi="60" aria-label="C4"></button>
-          <button class="key white" data-midi="62" aria-label="D4"></button>
-          <button class="key white" data-midi="64" aria-label="E4"></button>
-          <button class="key white" data-midi="65" aria-label="F4"></button>
-          <button class="key white" data-midi="67" aria-label="G4"></button>
-          <button class="key white" data-midi="69" aria-label="A4"></button>
-          <button class="key white" data-midi="71" aria-label="B4"></button>
-          <button class="key white" data-midi="72" aria-label="C5"></button>
-          <button class="key black" data-midi="61" style="left:8.75%"  aria-label="C#4"></button>
-          <button class="key black" data-midi="63" style="left:21.25%" aria-label="D#4"></button>
-          <button class="key black" data-midi="66" style="left:46.25%" aria-label="F#4"></button>
-          <button class="key black" data-midi="68" style="left:58.75%" aria-label="G#4"></button>
-          <button class="key black" data-midi="70" style="left:71.25%" aria-label="A#4"></button>
-        </div>
-      </div>
-
-      <div class="anime-strip glass reveal">
-        <img src="assets/img/anime-room.jpg" alt="Góc anime của Minh Tú">
-        <div class="anime-text">
-          <h3>🌸 Góc anime</h3>
-          <p>Một vài bộ anime đã "định hình tâm hồn" mình — và dĩ nhiên danh sách này luôn dài thêm mỗi mùa! ✨</p>
-          <div class="info-chips" id="anime-chips"></div>
         </div>
       </div>
     </section>
 
     <!-- ================= DỰ ÁN ================= -->
     <section class="page" id="page-gallery">
-      <h2 class="page-title">Dự án <span>đã làm</span></h2>
-      <p class="page-sub">Những sản phẩm mình đã xây dựng — bấm nút để xem code trên GitHub.</p>
-      <div id="project-grid" class="project-grid"></div>
+      <h2 class="page-title" data-i18n-html="gallery.title">Dự án <span>Tiêu biểu</span></h2>
+      <p class="page-sub" data-i18n="gallery.sub">Các hệ thống Fullstack, ứng dụng Desktop GPU và nền tảng âm nhạc mình đã thiết kế &amp; phát triển. Kéo trượt ngang hoặc chuyển chế độ xem tùy thích!</p>
+
+      <!-- Thanh công cụ: lọc theo danh mục + đổi chế độ xem Trượt kéo / Lưới -->
+      <div class="project-toolbar">
+        <div class="project-filters" role="tablist" aria-label="Bộ lọc dự án">
+          <button class="filter-btn active" data-filter="all" type="button" data-i18n="gallery.filterAll">✦ Tất cả (6)</button>
+          <button class="filter-btn" data-filter="fullstack" type="button" data-i18n="gallery.filterFullstack">🌐 Fullstack Web</button>
+          <button class="filter-btn" data-filter="desktop" type="button" data-i18n="gallery.filterDesktop">🖥️ Desktop &amp; GPU</button>
+          <button class="filter-btn" data-filter="audio" type="button" data-i18n="gallery.filterAudio">🎹 Audio &amp; MIDI</button>
+        </div>
+
+        <div class="project-view-controls">
+          <div class="carousel-nav" id="carousel-nav">
+            <button id="proj-prev" class="c-nav-btn" type="button" aria-label="Dự án trước">‹</button>
+            <button id="proj-next" class="c-nav-btn" type="button" aria-label="Dự án tiếp theo">›</button>
+          </div>
+          <button id="view-toggle" class="view-toggle-btn" type="button" title="Đổi chế độ Trượt ngang / Xem lưới">
+            <span class="v-ico">⊞</span> <span class="v-txt" data-i18n="gallery.viewGrid">Xem dạng lưới</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="drag-hint" id="drag-hint" data-i18n-html="gallery.dragHint"><span>⇄</span> Giữ chuột kéo ngang, lăn con lăn hoặc bấm mũi tên để lướt qua sân khấu dự án</p>
+
+      <!-- Sân khấu trượt kéo dự án -->
+      <div id="project-viewport" class="project-viewport carousel-mode">
+        <div id="project-grid" class="project-grid"></div>
+      </div>
+
+      <!-- Thanh tiến trình & chấm chỉ báo vị trí trượt -->
+      <div class="carousel-footer" id="carousel-footer">
+        <div class="carousel-progress"><i id="carousel-bar"></i></div>
+        <div class="carousel-dots" id="carousel-dots"></div>
+      </div>
+    </section>
+
+    <!-- ================= SỞ THÍCH ================= -->
+    <section class="page" id="page-hobbies">
+      <h2 class="page-title" data-i18n-html="hobbies.title">Sở thích <span>của mình</span></h2>
+      <p class="page-sub" data-i18n-html="hobbies.sub">Ngoài những giờ làm việc với code, đây là bốn góc nhỏ giúp mình nạp lại năng lượng, thư giãn và giữ lửa sáng tạo mỗi ngày: <b>Chơi đàn</b> • <b>Nghe nhạc</b> • <b>Xem Anime</b> • <b>Chơi Game</b>.</p>
+
+      <!-- 1. Chơi đàn (Piano, Acoustic Guitar, Electric Guitar) -->
+      <div class="section-block">
+        <div class="sub-head">
+          <span class="sub-badge" data-i18n="hobbies.sec1Badge">01 • CHƠI ĐÀN</span>
+          <h3 data-i18n="hobbies.sec1Title">🎸 Những cây đàn gắn bó với mình</h3>
+          <p class="sub-desc" data-i18n="hobbies.sec1Desc">Âm nhạc là nơi mình tìm về mỗi khi muốn cân bằng lại nhịp sống sau những giờ ngồi trước màn hình máy tính.</p>
+        </div>
+        <div id="instrument-grid" class="instrument-grid"></div>
+      </div>
+
+      <!-- Phòng thu Piano Mini tương tác -->
+      <div class="glass card piano-box reveal">
+        <div class="piano-header">
+          <div>
+            <span class="sub-badge" data-i18n="hobbies.pianoBadge">GÓC TƯƠNG TÁC</span>
+            <h3 data-i18n="hobbies.pianoTitle">🎹 Dạo thử vài nốt trên Đàn Piano Mini nhé!</h3>
+            <p class="piano-hint" data-i18n-html="hobbies.pianoHint">Cậu có thể bấm chuột, chạm màn hình hoặc gõ phím <b>A S D F G H J K</b> (phím đen: <b>W E T Y U</b>) để chơi đàn ngay tại đây~ ♪</p>
+          </div>
+          <div class="piano-live-badge" id="piano-note-display" data-i18n="hobbies.pianoReady">♪ Sẵn sàng • C4 – C5</div>
+        </div>
+
+        <div class="piano-toolbar">
+          <div class="tone-group" role="group" aria-label="Chọn âm sắc đàn">
+            <span class="t-label" data-i18n="hobbies.toneLabel">Âm sắc:</span>
+            <button type="button" class="tone-btn active" data-tone="piano">🎹 Crystal Piano</button>
+            <button type="button" class="tone-btn" data-tone="musicbox">🔔 Music Box</button>
+            <button type="button" class="tone-btn" data-tone="guitar">🎸 Acoustic Pluck</button>
+            <button type="button" class="tone-btn" data-tone="synth8bit">🎮 8-Bit Synth</button>
+          </div>
+          <div class="demo-group">
+            <select id="piano-song" class="piano-select" aria-label="Chọn giai điệu mẫu">
+              <option value="starlight">♪ Miku Starlight</option>
+              <option value="sakura">🌸 Sakura Waltz</option>
+              <option value="ballad">✨ Anime Ballad</option>
+            </select>
+            <button id="piano-demo" class="btn-demo-song" type="button" data-i18n="hobbies.demoPlay">▶ Tự chơi mẫu</button>
+          </div>
+        </div>
+
+        <div id="piano">
+          <button class="key white" data-midi="60" data-note="C4"  data-key="a" aria-label="C4"><span>C4<small>A</small></span></button>
+          <button class="key white" data-midi="62" data-note="D4"  data-key="s" aria-label="D4"><span>D4<small>S</small></span></button>
+          <button class="key white" data-midi="64" data-note="E4"  data-key="d" aria-label="E4"><span>E4<small>D</small></span></button>
+          <button class="key white" data-midi="65" data-note="F4"  data-key="f" aria-label="F4"><span>F4<small>F</small></span></button>
+          <button class="key white" data-midi="67" data-note="G4"  data-key="g" aria-label="G4"><span>G4<small>G</small></span></button>
+          <button class="key white" data-midi="69" data-note="A4"  data-key="h" aria-label="A4"><span>A4<small>H</small></span></button>
+          <button class="key white" data-midi="71" data-note="B4"  data-key="j" aria-label="B4"><span>B4<small>J</small></span></button>
+          <button class="key white" data-midi="72" data-note="C5"  data-key="k" aria-label="C5"><span>C5<small>K</small></span></button>
+          <button class="key black" data-midi="61" data-note="C#4" data-key="w" style="left:8.75%"  aria-label="C#4"><span>W</span></button>
+          <button class="key black" data-midi="63" data-note="D#4" data-key="e" style="left:21.25%" aria-label="D#4"><span>E</span></button>
+          <button class="key black" data-midi="66" data-note="F#4" data-key="t" style="left:46.25%" aria-label="F#4"><span>T</span></button>
+          <button class="key black" data-midi="68" data-note="G#4" data-key="y" style="left:58.75%" aria-label="G#4"><span>Y</span></button>
+          <button class="key black" data-midi="70" data-note="A#4" data-key="u" style="left:71.25%" aria-label="A#4"><span>U</span></button>
+        </div>
+      </div>
+
+      <!-- 2. Không gian Nghe nhạc (Music Taste & Vinyl Stage) -->
+      <div class="section-block">
+        <div class="sub-head">
+          <span class="sub-badge" data-i18n="hobbies.sec2Badge">02 • NGHE NHẠC</span>
+          <h3 data-i18n="hobbies.sec2Title">🎧 Gu âm nhạc &amp; Những giai điệu hay nghe</h3>
+          <p class="sub-desc" data-i18n="hobbies.sec2Desc">Mỗi thời điểm trong ngày mình lại chọn một màu sắc âm nhạc khác nhau để giữ cảm hứng làm việc.</p>
+        </div>
+        <div class="music-taste-layout">
+          <div class="glass card vinyl-card reveal">
+            <div class="vinyl-stage" id="vinyl-stage">
+              <div class="vinyl-disc">
+                <div class="vinyl-grooves"></div>
+                <img src="assets/img/avatar.jpg?v=4.0" alt="Miku Vinyl Label" class="vinyl-center">
+              </div>
+              <div class="vinyl-arm"></div>
+            </div>
+            <h4 data-i18n="hobbies.vinylTitle">💿 Mâm đĩa nhạc nền</h4>
+            <p data-i18n="hobbies.vinylDesc">Một chiếc tai nghe tốt và danh sách nhạc quen thuộc luôn là thứ đầu tiên mình bật lên trước khi mở VS Code.</p>
+            <button type="button" id="vinyl-play-btn" class="p-btn" data-i18n="hobbies.vinylPlay">♪ Bật / Tắt Nhạc Nền</button>
+          </div>
+          <div id="music-taste-grid" class="music-taste-grid"></div>
+        </div>
+      </div>
+
+      <!-- 3. Bộ sưu tập Anime yêu thích (Visual Cards) -->
+      <div class="section-block">
+        <div class="sub-head">
+          <span class="sub-badge" data-i18n="hobbies.sec3Badge">03 • XEM ANIME</span>
+          <h3 data-i18n="hobbies.sec3Title">🌸 Những bộ Anime mình yêu thích nhất</h3>
+          <p class="sub-desc" data-i18n="hobbies.sec3Desc">Những câu chuyện về âm nhạc, tuổi trẻ và thế giới kỳ ảo đã truyền cho mình rất nhiều cảm hứng sáng tạo (bấm vào ảnh để xem rõ hơn nhé):</p>
+        </div>
+        <div id="anime-grid" class="anime-grid"></div>
+      </div>
+
+      <!-- 4. Góc Chơi Game (Gaming Corner) -->
+      <div class="section-block">
+        <div class="sub-head">
+          <span class="sub-badge" data-i18n="hobbies.sec4Badge">04 • CHƠI GAME</span>
+          <h3 data-i18n="hobbies.sec4Title">🎮 Góc Gaming — Những tựa game mình hay chơi</h3>
+          <p class="sub-desc" data-i18n="hobbies.sec4Desc">Sau những giờ học tập và code căng thẳng, đây là những thế giới ảo nơi mình giải trí, rèn phản xạ và sát cánh cùng hội bạn thân:</p>
+        </div>
+        <div id="game-grid" class="anime-grid game-grid"></div>
+      </div>
     </section>
 
     <!-- ================= LIÊN HỆ ================= -->
     <section class="page" id="page-contact">
-      <h2 class="page-title">Kết nối <span>với mình</span></h2>
-      <p class="page-sub">Cùng mình trò chuyện về âm nhạc, anime, công nghệ — hoặc đơn giản là nói "xin chào" nhé! 💌</p>
+      <h2 class="page-title" data-i18n-html="contact.title">Kết nối <span>&amp; Hợp tác</span></h2>
+      <p class="page-sub" data-i18n="contact.sub">Cùng mình trò chuyện về công nghệ, âm nhạc, anime — hoặc kết nối cho các cơ hội hợp tác phát triển phần mềm nhé! 💌</p>
       <div id="social-grid" class="social-grid"></div>
       <div class="glass card mail-card reveal">
         <span class="mail-ico">💌</span>
-        <p>Thích viết thư hơn? Email mình tại <a id="mail-link" href="#">lexuanminhtufw@gmail.com</a></p>
+        <div class="mail-info">
+          <p><span data-i18n="contact.mailLabel">Liên hệ trực tiếp qua Email:</span> <a id="mail-link" href="mailto:lexuanminhtufw@gmail.com">lexuanminhtufw@gmail.com</a></p>
+        </div>
+        <button id="copy-mail" class="btn-copy-mail" type="button" data-email="lexuanminhtufw@gmail.com" data-i18n="contact.copyBtn">📋 Sao chép Email</button>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2026 <b>Lê Xuân Minh Tú</b> — Made with 💙 &amp; ♪</p>
-    <p class="foot-sub">Lấy cảm hứng từ Hatsune Miku • Thiết kế &amp; code bởi chính chủ</p>
+    <p>© 2026 <b>Lê Xuân Minh Tú (Yami · @lxmtuu)</b> — Fullstack Developer &amp; Software Engineer 💙</p>
   </footer>
 
   <!-- ===== Trình phát nhạc nền ===== -->
@@ -216,13 +357,14 @@
       <div class="music-controls">
         <span class="vol-ico">🔊</span>
         <input type="range" id="music-vol" min="0" max="100" value="60" aria-label="Âm lượng">
-        <button id="btn-upload" title="Chọn nhạc từ máy của bạn">📁</button>
+        <button id="btn-mode" type="button" title="Đổi nhạc MP3 / Miku Synth">🎹</button>
+        <button id="btn-upload" type="button" title="Chọn nhạc từ máy của bạn">📁</button>
         <input type="file" id="file-input" accept="audio/*" hidden>
       </div>
-      <p class="panel-hint">Mặc định: nhạc tổng hợp chạy giữa các trang • bỏ <b>bgm.mp3</b> vào <b>assets/audio</b> hoặc bấm 📁 để dùng nhạc riêng</p>
+      <p class="panel-hint" data-i18n-html="music.hint">Nhạc nền phát xuyên suốt giữa các trang • Bấm <b>🎹</b> để đổi MP3 / Synth hoặc <b>📁</b> để mở nhạc từ máy của cậu</p>
     </div>
-    <button id="music-settings" aria-label="Cài đặt nhạc">⚙</button>
-    <button id="music-toggle" aria-label="Bật / tắt nhạc nền">
+    <button id="music-settings" type="button" aria-label="Cài đặt nhạc">⚙</button>
+    <button id="music-toggle" type="button" aria-label="Bật / tắt nhạc nền">
       <span class="eq"><i></i><i></i><i></i><i></i></span>
       <span class="music-icon">♪</span>
     </button>
@@ -230,13 +372,13 @@
 
   <!-- ===== Lightbox ===== -->
   <div id="lightbox" aria-hidden="true">
-    <button id="lightbox-close" aria-label="Đóng">✕</button>
+    <button id="lightbox-close" type="button" aria-label="Đóng">✕</button>
     <img id="lightbox-img" src="" alt="Ảnh phóng to">
     <p id="lightbox-cap"></p>
   </div>
 
-  <script src="js/config.js"></script>
-  <script src="js/music.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/config.js?v=4.01"></script>
+  <script src="js/music.js?v=4.01"></script>
+  <script src="js/main.js?v=4.01"></script>
 </body>
 </html>
